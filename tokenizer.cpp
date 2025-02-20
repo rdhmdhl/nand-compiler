@@ -6,12 +6,17 @@
 // constructor, opens the input file
 Tokenizer::Tokenizer(const std::string& inputFile){
 	JackFile.open(inputFile);
+	TokenFile.open("TokenFile.txt");
 	std::string line, token;
 	bool inMultiLineComments = false;
 	bool inString = false;
 
 	if(!JackFile.is_open()){
 		throw std::runtime_error("Could not open the input file: " + inputFile);
+	}
+
+	if(!TokenFile.is_open()){
+		throw std::runtime_error("Could not open the output token file: TokenFile.txt");
 	}
 
 	
@@ -67,7 +72,8 @@ Tokenizer::Tokenizer(const std::string& inputFile){
 				if(line[i] == '"' && (i == 0 || line[i-1] != '\\')){
 					inString = false;
 					token += line[i];
-					tokens.push_back(token);
+					TokenFile << token << std::endl;
+					//tokens.push_back(token);
 					token.clear();
 				} else {
 					token += line[i];
@@ -75,7 +81,8 @@ Tokenizer::Tokenizer(const std::string& inputFile){
 			} else if (line[i] == '"'){
 				// start of string
 				if(!token.empty()){
-					tokens.push_back(token);
+					TokenFile << token << std::endl;
+					//tokens.push_back(token);
 				}
 				inString = true;
 				token += line[i];
@@ -83,16 +90,19 @@ Tokenizer::Tokenizer(const std::string& inputFile){
 			} else if(isSymbol(line[i])){
 				// if we have a token built up, add it before the symbol
 				if(!token.empty()){
-					tokens.push_back(token);
+					TokenFile << token << std::endl;
+					//tokens.push_back(token);
 					token.clear();
 				}
 				// the symbol itself is a token
-				tokens.push_back(std::string(1, line[i]));
+				TokenFile << std::string(1, line[i]) << std::endl;;
+				//tokens.push_back(std::string(1, line[i]));
 
 			} else if (line[i] == ' ' || line[i] == '\t'){
 				// space or tab, end the current token if one exists
 				if(!token.empty()){
-					tokens.push_back(token);
+					TokenFile << token << std::endl;
+					//tokens.push_back(token);
 					token.clear();
 				}
 			} else {
@@ -102,7 +112,8 @@ Tokenizer::Tokenizer(const std::string& inputFile){
 		}
 		// add any remaining token after processing the line
 		if(!token.empty()){
-			tokens.push_back(token);
+			TokenFile << token << std::endl;
+			//tokens.push_back(token);
 		}
 	}
 
@@ -118,6 +129,7 @@ void Tokenizer::printAll(){
 // deconstructor
 Tokenizer::~Tokenizer(){
 	if(JackFile.is_open()) JackFile.close();
+	if(TokenFile.is_open()) TokenFile.close();
 }
 
 bool Tokenizer::isSymbol(char c){

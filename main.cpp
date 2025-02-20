@@ -1,17 +1,15 @@
-#include "./tokenizer.h"
-#include "enums.h"
+#include "./Tokenizer.h"
+#include "./compilationEngine.h"
+//#include "enums.h"
 //#include "utils.h"
 #include <iostream> 
 
+// TODO: collect tokens inside a vector, use vector within the tokenizer and compilation engine
+
 int main(){
 	Tokenizer tokenizer("ArrayTest.jack");
-	 
-	while(tokenizer.hasMoreTokens()){
-		if(tokenizer.tokenType() == IDENTIFIER){
-			std::cout << "Identifier: " << tokenizer.identifier() << std::endl;
-		}
-		tokenizer.advance();
-	}
+	compilationEngine compilationEngine("TokenFile.txt", "Tokens.xml");
+	compilationEngine.compileClass();
 	std::cout << "no more tokens." << std::endl;
 	return -1;
 }

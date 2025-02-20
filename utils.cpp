@@ -19,6 +19,10 @@ std::vector<std::string> keywords = {
     "nil" // Corresponds to NIL in the enum
 };
 
+std::vector<std::string> statements = {
+    "let", "do", "if", "else", "while", "return"
+};
+
 char stringToChar(const std::string& str) {
     // define the set of symbols we're interested in
     const std::string symbols = "(){}[].,;+-X/&|<>=~?!";
@@ -40,4 +44,45 @@ char stringToChar(const std::string& str) {
     }
     // if we've reached here, the string doesn't match any of our symbols
     throw std::invalid_argument("String '" + str + "' is not a recognized symbol.");
+}
+
+bool isSymbol(char c){
+	const std::string symbols = "(){}[].,;+-X/&|<>=~?!";
+	return symbols.find(c) != std::string::npos;
+}
+
+TokenType tokenType(std::string token){
+
+	if(token.empty()){
+		throw std::runtime_error("Empty token encountered. Cannot identify token type: " + token);
+	}
+
+	// check if token if a keyword
+	if(std::find(keywords.begin(), keywords.end(), token) != keywords.end()){
+		return KEYWORD; 
+	}
+
+	// check if token is a symbol
+	if(token.length() == 1 && isSymbol(token[0])){
+		return SYMBOL;
+	}
+
+	// check if token is an integer
+	bool is_integer = true;
+	for(char c : token){
+		if(!std::isdigit(c)){
+			is_integer = false;
+			break;
+		}
+	}
+	if(is_integer){
+		return INT_CONST;
+	}
+
+	// check if token is a string
+	if(token.length() >= 2 && token.front() == '"' && token.back() == '"'){
+		return STRING_CONST;
+	}
+
+	return IDENTIFIER;
 }

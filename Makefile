@@ -2,10 +2,10 @@
 CXX = clang++
 
 # Compiler flags
-CXXFLAGS = -std=c++11 -Wall -Wextra
+CXXFLAGS = -std=c++11 -Wall -Wextra -g -fsanitize=address
 
 # Source files
-SRCS = main.cpp tokenizer.cpp utils.cpp
+SRCS = main.cpp tokenizer.cpp CompilationEngine.cpp utils.cpp
 
 # Object files, automatically generated from SRCS
 OBJS = $(SRCS:.cpp=.o)

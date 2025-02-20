@@ -7,9 +7,12 @@
 #include "enums.h"
 #include "utils.h"
 
+extern TokenType tokenType();
+
 class Tokenizer {
 private:
     std::ifstream JackFile;
+    std::ofstream TokenFile;
     std::string currentToken;
     std::vector<std::string> tokens;
     size_t currentTokenIndex = 0;
